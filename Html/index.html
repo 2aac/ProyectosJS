@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ejemplo de JavaScript</title>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body
+    style="
+      padding-top: 50px;
+      background: rgb(1, 105, 227);
+      background: linear-gradient(
+        90deg,
+        rgba(1, 105, 227, 1) 0%,
+        rgba(0, 144, 224, 1) 53%,
+        rgba(1, 105, 227, 1) 100%
+      );
+    "
+  >
+    <div>
+      <p style="margin-left: 20px; color: white; font-size: 20px">
+        Ingrese la ip a buscar:
+        <input type="text" id="ip" placeholder="1.1.1.1" />
+      </p>
+      <button style="margin-left: 20px" id="buscar">Buscar</button>
+    </div>
+    <div class="container">
+      <div class="row" style="color: white;">
+        <table class="table table-striped" id="tabla1"></table>
+      </div>
+    </div>
+    <script>
+      let cad;
+      document.getElementById("buscar").addEventListener("click", () => {
+        let apiKey = "QniVb3RC2rZOGCfzJzWcZCWGJRPB6kj0UG2nxBFh";
+        let ip = document.getElementById("ip").value;
+        console.log(ip);
+        const peticion = fetch(
+          `https://api.ipbase.com/v2/info?apikey=${apiKey}&ip=${ip}`
+        );
+        peticion
+          .then((res) => res.json())
+          .then(({ data }) => {
+            let { ip } = data;
+            let { type } = data.range_type;
+            console.log(type, ip);
+            if (type == "PUBLIC") {
+              let { latitude, longitude, continent } = data.location;
+              let { isp, organization } = data.connection;
+              console.log(continent.name, isp, organization);
+              row= `<tr><td>${ip}</td>
+                            <td>${type}</td>
+                            <td>${organization}</td>
+                            <td>${isp}</td>
+                            <td>${latitude}</td>
+                            <td>${longitude}</td>
+                            <td>${continent.name}</td></tr>`;
+                            cad+=row;
+              document.getElementById("tabla1").innerHTML = cad;
+            } else {
+              document.getElementById("tabla1").innerHTML =
+                '<h2 class="warning">LA IP ES PRIVADA</h2>';
+            }
+            // let {name} = data.location.country;
+            // let {name_native} = data.location.country.languages[0]
+            // let {timezones} = data.location.country;
+            // for(let i=0; i<timezones.length;i++){
+            //     cad += `<tr><td>${timezones[i]}</td>
+            //         <td>${name}</td>
+            //         <td>${name_native}</td></tr>`;
+            //     }
+            // console.log(timezones[0],name);
+            // console.log(name_native)
+          })
+          .catch(console.warn);
+      });
+    </script>
+  </body>
+</html>
