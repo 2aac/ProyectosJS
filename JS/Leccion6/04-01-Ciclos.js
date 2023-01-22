@@ -49,6 +49,7 @@ switch (b) {
 }
 
 
+
 //Switch hace comparacion estricta por lo que compara valor y tipo.
 let mes = 2;
 
